@@ -1,7 +1,37 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:get/get.dart';
 
-void main() {
-  runApp(const MyApp());
+import 'app/network/DioClient.dart';
+
+Future<void> main() async {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  // InitialScreenState initialScreenState = checkUserLoggedIn();
+  // print(initialScreenState.route);
+  Get.put<DioClient>(DioClient(Dio()));
+
+  runApp(ScreenUtilInit(
+      designSize: const Size(375, 812),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (ctx, child) {
+        FlutterNativeSplash.remove();
+        return GetMaterialApp(
+          debugShowCheckedModeBanner: false,
+          title: "Application",
+          scrollBehavior: const ScrollBehavior().copyWith(overscroll: false),
+          // initialRoute: ,
+          // getPages: AppPages.routes,
+          themeMode: ThemeMode.light,
+          home: const MyApp(),
+          // initialBinding: InitialBindings(userDetails: userDetails),
+          defaultTransition: Transition.cupertino,
+        );
+      }));
 }
 
 class MyApp extends StatelessWidget {
